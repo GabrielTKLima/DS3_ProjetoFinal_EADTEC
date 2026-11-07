@@ -72,7 +72,7 @@ class ExperienciaProfissional
     //Métodos Banco de Dados
     public function inserirBD()
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -97,7 +97,7 @@ class ExperienciaProfissional
 
     public function excluirBD($id)
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -120,7 +120,7 @@ class ExperienciaProfissional
     }
     public function listaExperiencias($idusuario)
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         
         $con = new ConexaoBD();
         $conn = $con->conectar();

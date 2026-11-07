@@ -61,7 +61,7 @@ class FormacaoAcad
     //Métodos Banco de Dados
     public function inserirBD()
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -86,7 +86,7 @@ class FormacaoAcad
 
     public function excluirBD($id)
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -109,7 +109,7 @@ class FormacaoAcad
     }
     public function listaFormacoes($idusuario)
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -125,7 +125,7 @@ class FormacaoAcad
 
     public function atualizarBD()
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         $con = new ConexaoBD();
         $conn = $con->conectar();
         if ($conn->connect_error) {

@@ -4,7 +4,6 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<title>Enlatados Juarez</title>
@@ -59,7 +58,7 @@
     <!--Incial -->
     <header class="w3-container w3-padding-32 w3-center " id="home">
         <h1>
-            <img src="../Img/Enlatados.png" alt="Logo" class="w3-image" width="50%">
+            <img src="<?php echo htmlspecialchars(projectUrl('Img/Enlatados.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="Logo" class="w3-image" width="50%">
             </br>
         </h1>
         <a class="w3-text-cyan"href="http://www.freepik.com">Designed by brgfx / Freepik</a>
@@ -73,7 +72,7 @@
     <div class="w3-padding-128 w3-content w3-text-grey" id="dPessoais">
         <h2 class="w3-text-cyan">Dados Pessoais</h2>
         
-        <form action="/Controller/navegacao.php" method="post" class=" w3-row  w3-light-grey w3-text-blue w3-margin" style="width: 70%;">
+        <form action="<?php echo htmlspecialchars(projectUrl('Controller/navegacao.php'), ENT_QUOTES, 'UTF-8'); ?>" method="post" class=" w3-row  w3-light-grey w3-text-blue w3-margin" style="width: 70%;">
         <input class="w3-input w3-border w3-round-large" name="txtID" type="hidden"
                     value="">
             <div class="w3-row w3-section">
@@ -131,7 +130,7 @@
 
 
 
-        <form action="/Controller/navegacao.php" method="post" class=" w3-row  w3-light-grey w3-text-blue w3-margin" style="width: 70%;">
+        <form action="<?php echo htmlspecialchars(projectUrl('Controller/navegacao.php'), ENT_QUOTES, 'UTF-8'); ?>" method="post" class=" w3-row  w3-light-grey w3-text-blue w3-margin" style="width: 70%;">
             <div class="w3-row w3-center">
                 <div class="w3-col" style="width:50%;">
                     Data Inicial
@@ -199,7 +198,7 @@
     <br> <br> <br>
     <div class="w3-padding-128 w3-content w3-text-grey" id="eProfissional">
         <h2 class="w3-text-cyan">Experiência Profissional</h2>
-                <form action="/Controller/navegacao.php" method="post" class=" w3-row  w3-light-grey w3-text-blue w3-margin" style="width: 70%;">
+                <form action="<?php echo htmlspecialchars(projectUrl('Controller/navegacao.php'), ENT_QUOTES, 'UTF-8'); ?>" method="post" class=" w3-row  w3-light-grey w3-text-blue w3-margin" style="width: 70%;">
             <div class="w3-row w3-center">
                 <div class="w3-col" style="width:50%;">
                     Data Inicial
@@ -275,7 +274,34 @@
 
         <div class="w3-padding-128 w3-content w3-text-grey" id="oFormacao">
         <h2 class="w3-text-cyan">Outras Formações</h2>
-        <form action="/Controller/navegacao.php" method="post" class=" w3-row  w3-light-grey w3-text-blue w3-margin" style="width: 70%;">
+            <?php
+                require_once __DIR__ . '/../Controller/OutrasFormacoesController.php';
+                require_once __DIR__ . '/../Model/Usuario.php';
+                $usuarioOF = isset($_SESSION['Usuario']) ? unserialize($_SESSION['Usuario']) : null;
+                $controllerOF = new OutrasFormacoesController();
+                $listaOF = $usuarioOF instanceof Usuario
+                    ? $controllerOF->gerarLista($usuarioOF->getID())
+                    : false;
+                $mensagemOF = isset($_SESSION['mensagemOF']) ? $_SESSION['mensagemOF'] : null;
+                unset($_SESSION['mensagemOF']);
+                $dadosOF = isset($mensagemOF['dados']) ? $mensagemOF['dados'] : array();
+            ?>
+            <?php if ($mensagemOF !== null): ?>
+                <div class="w3-panel <?php echo $mensagemOF['tipo'] === 'sucesso' ? 'w3-pale-green' : 'w3-pale-red'; ?>"
+                     role="alert" aria-live="polite">
+                    <?php foreach ($mensagemOF['mensagens'] as $mensagem): ?>
+                        <p><?php echo htmlspecialchars($mensagem, ENT_QUOTES, 'UTF-8'); ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+            <?php if ($listaOF === false && $controllerOF->getMensagens()): ?>
+                <div class="w3-panel w3-pale-red" role="alert" aria-live="polite">
+                    <?php foreach ($controllerOF->getMensagens() as $mensagem): ?>
+                        <p><?php echo htmlspecialchars($mensagem, ENT_QUOTES, 'UTF-8'); ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+            <form action="<?php echo htmlspecialchars(projectUrl('Controller/navegacao.php'), ENT_QUOTES, 'UTF-8'); ?>" method="post" class=" w3-row  w3-light-grey w3-text-blue w3-margin" style="width: 70%;">
             <div class="w3-row w3-center">
                 <div class="w3-col" style="width:50%;">
                     Data Inicial
@@ -290,7 +316,8 @@
                         <i class="w3-xxlarge fa fa-calendar"></i>
                     </div>
                     <div class="w3-rest">
-                        <input class="w3-input w3-border w3-round-large" name="txtInicioOF" type="date" placeholder="">
+                        <input class="w3-input w3-border w3-round-large" name="txtInicioOF" type="date" required
+                               value="<?php echo htmlspecialchars(isset($dadosOF['inicio']) ? $dadosOF['inicio'] : '', ENT_QUOTES, 'UTF-8'); ?>">
                     </div>
                 </div>
                 <div class="w3-row w3-section w3-rest" style = "">
@@ -299,7 +326,8 @@
                         <i class="w3-xxlarge  fa fa-calendar"></i>
                     </div>
                     <div class="w3-rest">
-                        <input class="w3-input w3-border w3-round-large" name="txtFimOF" type="date" placeholder="">
+                        <input class="w3-input w3-border w3-round-large" name="txtFimOF" type="date" required
+                               value="<?php echo htmlspecialchars(isset($dadosOF['fim']) ? $dadosOF['fim'] : '', ENT_QUOTES, 'UTF-8'); ?>">
                     </div>
                 </div>
             <div>
@@ -308,7 +336,9 @@
                     <i class="w3-xxlarge fa fa-align-justify"></i>
                 </div>
                 <div class="w3-rest">
-                    <input class="w3-input w3-border w3-round-large" name="txtDescOF" type="text" placeholder="Ex: Curso de Inglês - Inglês City">
+                    <input class="w3-input w3-border w3-round-large" name="txtDescOF" type="text" maxlength="150" required
+                           value="<?php echo htmlspecialchars(isset($dadosOF['descricao']) ? $dadosOF['descricao'] : '', ENT_QUOTES, 'UTF-8'); ?>"
+                           placeholder="Ex: Curso de Inglês - Inglês City">
                 </div>
             </div>
             
@@ -332,7 +362,31 @@
                     <th>Descrição</th>
                     <th>Apagar</th>
                 </tr>
-            <thead>
+            </thead>
+            <tbody>
+                <?php if ($listaOF instanceof mysqli_result && $listaOF->num_rows > 0): ?>
+                    <?php while ($formacaoOF = $listaOF->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars((string)$formacaoOF['inicio'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?php echo htmlspecialchars((string)$formacaoOF['fim'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?php echo htmlspecialchars((string)$formacaoOF['descricao'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td>
+                                <form action="<?php echo htmlspecialchars(projectUrl('Controller/navegacao.php'), ENT_QUOTES, 'UTF-8'); ?>" method="post">
+                                    <input type="hidden" name="id" value="<?php echo (int)$formacaoOF['idoutrasformacoes']; ?>">
+                                    <button type="submit" name="btnExcluirOF" class="w3-button w3-red w3-round-large"
+                                            aria-label="Excluir formação">
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Excluir
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php elseif ($listaOF instanceof mysqli_result): ?>
+                    <tr>
+                        <td colspan="4">Nenhuma outra formação cadastrada.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
          
             </table>
            

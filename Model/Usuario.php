@@ -65,7 +65,7 @@ class Usuario {
     //Métodos Banco de Dados
     public function inserirBD()
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -89,7 +89,7 @@ class Usuario {
 
     public function carregarUsuario($cpf)
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -97,9 +97,13 @@ class Usuario {
             die("Connection failed: " . $conn->connect_error);
         } 
 
-        $sql = "SELECT * FROM usuario WHERE cpf =  ".$cpf ;
-        $re = $conn->query($sql);
+        $stmt = $conn->prepare("SELECT * FROM usuario WHERE cpf = ?");
+        $stmt->bind_param("s", $cpf);
+        $stmt->execute();
+        $re = $stmt->get_result();
         $r = $re->fetch_object();
+        $stmt->close();
+        $conn->close();
         if($r != null)
         {
             $this->id = $r->idusuario;
@@ -108,19 +112,17 @@ class Usuario {
             $this->cpf = $r->cpf;
             $this->dataNascimento = $r->dataNascimento;
             $this->senha = $r->senha;
-            $conn->close();
             return true;
         }
         else
         {
-            $conn->close();
             return false;
         }
     }
 
     public function carregarUsuarioID($id)
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -150,7 +152,7 @@ class Usuario {
     }
     public function atualizarBD()
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         $con = new ConexaoBD();
         $conn = $con->conectar();
         if ($conn->connect_error) {
@@ -171,7 +173,7 @@ class Usuario {
 
     public function listaCadastrados()
     {
-        require_once 'ConexaoBD.php';   
+        require_once __DIR__ . '/ConexaoBD.php';
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
