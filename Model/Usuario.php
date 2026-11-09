@@ -1,71 +1,79 @@
 <?php
-class Usuario {
+
+class Usuario
+{
     private $id;
     private $nome;
     private $cpf;
     private $email;
     private $dataNascimento;
     private $senha;
-
-
+    
+  
     //ID
-    public function setId($id) {
+    public function setID($id)
+    {
         $this->id = $id;
     }
-
-    public function getId() {
+    public function getID()
+    {
         return $this->id;
     }
 
-    //Nome
-    public function setNome($nome) {
+    //nome
+    public function setNome($nome)
+    {
         $this->nome = $nome;
     }
-
-    public function getNome() {
+    public function getNome()
+    {
         return $this->nome;
     }
 
-    //CPF
-    public function setCpf($cpf) {
+    //cpf
+    public function setCPF($cpf)
+    {
         $this->cpf = $cpf;
     }
-
-    public function getCpf() {
+       public function getCPF()
+    {
         return $this->cpf;
     }
 
-    //Email
-    public function setEmail($email) {
+     //Email
+    public function setEmail($email)
+    {
         $this->email = $email;
     }
-
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    //Data de Nascimento
-    public function setDataNascimento($dataNascimento) {
+    //Data de nascimento
+    public function setDataNascimento($dataNascimento)
+    {
         $this->dataNascimento = $dataNascimento;
     }
-
-    public function getDataNascimento() {
+    public function getDataNascimento()
+    {
         return $this->dataNascimento;
     }
 
-    //Senha
-    public function setSenha($senha) {
+    // Senha
+    public function setSenha($senha)
+    {
         $this->senha = $senha;
     }
-
-    public function getSenha() {
+    public function getSenha()
+    {
         return $this->senha;
     }
 
     //Métodos Banco de Dados
     public function inserirBD()
     {
-        require_once __DIR__ . '/ConexaoBD.php';
+        require_once 'ConexaoBD.php';   
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -89,7 +97,7 @@ class Usuario {
 
     public function carregarUsuario($cpf)
     {
-        require_once __DIR__ . '/ConexaoBD.php';
+        require_once 'ConexaoBD.php';   
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -97,13 +105,9 @@ class Usuario {
             die("Connection failed: " . $conn->connect_error);
         } 
 
-        $stmt = $conn->prepare("SELECT * FROM usuario WHERE cpf = ?");
-        $stmt->bind_param("s", $cpf);
-        $stmt->execute();
-        $re = $stmt->get_result();
+        $sql = "SELECT * FROM usuario WHERE cpf =  ".$cpf ;
+        $re = $conn->query($sql);
         $r = $re->fetch_object();
-        $stmt->close();
-        $conn->close();
         if($r != null)
         {
             $this->id = $r->idusuario;
@@ -112,17 +116,19 @@ class Usuario {
             $this->cpf = $r->cpf;
             $this->dataNascimento = $r->dataNascimento;
             $this->senha = $r->senha;
+            $conn->close();
             return true;
         }
         else
         {
+            $conn->close();
             return false;
         }
     }
 
     public function carregarUsuarioID($id)
     {
-        require_once __DIR__ . '/ConexaoBD.php';
+        require_once 'ConexaoBD.php';   
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -152,7 +158,7 @@ class Usuario {
     }
     public function atualizarBD()
     {
-        require_once __DIR__ . '/ConexaoBD.php';
+        require_once 'ConexaoBD.php';   
         $con = new ConexaoBD();
         $conn = $con->conectar();
         if ($conn->connect_error) {
@@ -173,7 +179,7 @@ class Usuario {
 
     public function listaCadastrados()
     {
-        require_once __DIR__ . '/ConexaoBD.php';
+        require_once 'ConexaoBD.php';   
         
         $con = new ConexaoBD();
         $conn = $con->conectar();
@@ -186,7 +192,5 @@ class Usuario {
         $conn->close();
         return $re;
     }
-
 }
-
 ?>

@@ -8,22 +8,20 @@ class UsuarioController{
     
     
     public function inserir($nome, $cpf, $email,$senha) {
-        require_once __DIR__ . '/../Model/Usuario.php';
+        require_once '../Model/Usuario.php';
         $usuario = new Usuario();
         $usuario->setNome($nome);
         $usuario->setCPF($cpf);
         $usuario->setEmail($email); 
         $usuario->setSenha($senha);    
+        //return $usuario->getNome();
         $r = $usuario->inserirBD();
-        if ($r) {
-            session_regenerate_id(true);
-            $_SESSION['Usuario'] = serialize($usuario);
-        }
+        $_SESSION['Usuario'] = serialize($usuario);
         return $r;     
     }
 
     public function atualizar($id, $nome, $cpf, $email, $dataNascimento) {
-        require_once __DIR__ . '/../Model/Usuario.php';
+        require_once '../Model/Usuario.php';
         $usuario = new Usuario();
         $usuario->setId($id);
         $usuario->setNome($nome);
@@ -36,22 +34,28 @@ class UsuarioController{
     }
     public function login($cpf, $senha)
     {
-        if (!is_string($cpf) || trim($cpf) === '' ||
-            !is_string($senha) || $senha === '') {
-            return false;
-        }
-
-        require_once __DIR__ . '/../Model/Usuario.php';
+        require_once '../Model/Usuario.php';
         $usuario = new Usuario();
-        if ($usuario->carregarUsuario(trim($cpf)) &&
-            $usuario->getId() !== null &&
-            hash_equals((string)$usuario->getSenha(), $senha)) {
-            session_regenerate_id(true);
+        $usuario->carregarUsuario($cpf);
+        if($usuario->getSenha() == $senha)
+        {
             $_SESSION['Usuario'] = serialize($usuario);
             return true;
         }
-
-        return false;
+        else
+        {
+            return false;
+        }
+        
+        
+    }
+    public function gerarLista()
+    {
+        require_once '../Model/Administrador.php';
+        require_once '../Model/Usuario.php';
+        $u = new Usuario();
+        
+        return $results = $u->listaCadastrados();
     }
 }
 
